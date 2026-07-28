@@ -168,4 +168,5 @@ func showMessages(a fyne.App,discord *discordgo.Session, channelID string) {
 	}
 	content := container.NewVBox(cards...)
 	w.SetContent(content)
+	w.Show()
 }
