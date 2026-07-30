@@ -21,6 +21,8 @@ func main() {
 		dialog.ShowError(err, w)
 	}
 	exeDir := filepath.Dir(exePath)
+	icon, _ := os.ReadFile(filepath.Join(exeDir, "icon.png"))
+	w.SetIcon(fyne.NewStaticResource("icon", icon))
 	tokenPath := filepath.Join(exeDir, "token.txt")
 	if _, err := os.Stat(tokenPath); os.IsNotExist(err) {
 		os.Create(tokenPath)
@@ -153,7 +155,7 @@ func chatPage(a fyne.App, w fyne.Window, token string) {
 	w.SetContent(content)
 }
 
-func showMessages(a fyne.App,discord *discordgo.Session, channelID string) {
+func showMessages(a fyne.App, discord *discordgo.Session, channelID string) {
 	w := a.NewWindow("Messages")
 	w.Resize(fyne.NewSize(640, 480))
 	messages, err := discord.ChannelMessages(channelID, 100, "", "", "")
@@ -167,6 +169,7 @@ func showMessages(a fyne.App,discord *discordgo.Session, channelID string) {
 		cards = append(cards, card)
 	}
 	content := container.NewVBox(cards...)
-	w.SetContent(content)
+	scroll := container.NewScroll(content)
+	w.SetContent(scroll)
 	w.Show()
 }
